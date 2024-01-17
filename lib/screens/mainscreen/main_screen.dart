@@ -15,7 +15,7 @@ class BtmNavScreenIndex {
 }
 
 class MainScreen extends StatefulWidget {
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -59,66 +59,53 @@ class _MainScreenState extends State<MainScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        body: Stack(
+        body: IndexedStack(
+          index: selectedIndex,
           children: [
-            Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: btmNavHeight,
-                child: IndexedStack(
-                  index: selectedIndex,
-                  children: [
-                    Navigator(
-                      key: _homeKey,
-                      onGenerateRoute: (settings) => MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    ),
-                    Navigator(
-                      key: _basketKey,
-                      onGenerateRoute: (settings) => MaterialPageRoute(
-                          builder: (context) => const BasketScreen()),
-                    ),
-                    Navigator(
-                      key: _profileKey,
-                      onGenerateRoute: (settings) => MaterialPageRoute(
-                          builder: (context) => const ProfileScreen()),
-                    ),
-                  ],
-                )),
-            Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: AppColors.btmNavColor,
-                  height: btmNavHeight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      BtmNavItem(
-                          iconSvgPath: Assets.svg.user,
-                          text: "پروفایل",
-                          isActive: selectedIndex == BtmNavScreenIndex.profile,
-                          onTap: () => btmNavOnPressed(
-                              index: BtmNavScreenIndex.profile)),
-                      BtmNavItem(
-                          iconSvgPath: Assets.svg.cart,
-                          text: "سبد خرید",
-                          isActive: selectedIndex == BtmNavScreenIndex.basket,
-                          onTap: () =>
-                              btmNavOnPressed(index: BtmNavScreenIndex.basket)),
-                      BtmNavItem(
-                          iconSvgPath: Assets.svg.home,
-                          text: "خانه",
-                          isActive: selectedIndex == BtmNavScreenIndex.home,
-                          onTap: () =>
-                              btmNavOnPressed(index: BtmNavScreenIndex.home)),
-                    ],
-                  ),
-                ))
+            Navigator(
+              key: _homeKey,
+              onGenerateRoute: (settings) =>
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+            ),
+            Navigator(
+              key: _basketKey,
+              onGenerateRoute: (settings) =>
+                  MaterialPageRoute(builder: (context) => const BasketScreen()),
+            ),
+            Navigator(
+              key: _profileKey,
+              onGenerateRoute: (settings) => MaterialPageRoute(
+                  builder: (context) => const ProfileScreen()),
+            ),
           ],
+        ),
+        //btmNavBar
+        bottomNavigationBar: Container(
+          color: AppColors.btmNavColor,
+          height: btmNavHeight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              BtmNavItem(
+                  iconSvgPath: Assets.svg.user,
+                  text: "پروفایل",
+                  isActive: selectedIndex == BtmNavScreenIndex.profile,
+                  onTap: () =>
+                      btmNavOnPressed(index: BtmNavScreenIndex.profile)),
+              BtmNavItem(
+                  iconSvgPath: Assets.svg.cart,
+                  text: "سبد خرید",
+                  isActive: selectedIndex == BtmNavScreenIndex.basket,
+                  onTap: () =>
+                      btmNavOnPressed(index: BtmNavScreenIndex.basket)),
+              BtmNavItem(
+                  iconSvgPath: Assets.svg.home,
+                  text: "خانه",
+                  isActive: selectedIndex == BtmNavScreenIndex.home,
+                  onTap: () => btmNavOnPressed(index: BtmNavScreenIndex.home)),
+            ],
+          ),
         ),
       ),
     );
