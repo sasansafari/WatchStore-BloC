@@ -6,8 +6,17 @@ import 'package:watch_store/data/constants.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthInitial());
-  Dio _dio = Dio();
+  AuthCubit() : super(AuthInitial()) {
+    //check token
+    //isStore = T
+    // emit(LoggedInState());
+    //isStore = F
+    // emit(LoggedOutState());
+
+    emit(LoggedOutState());
+  }
+
+  final Dio _dio = Dio();
   sendSms(String mobile) async {
     emit(LoadingState());
     try {
