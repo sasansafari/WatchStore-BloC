@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watch_store/component/text_style.dart';
 import 'package:watch_store/gen/assets.gen.dart';
@@ -11,9 +12,49 @@ import 'package:watch_store/screens/auth/cubit/auth_cubit.dart';
 import 'package:watch_store/widgets/app_text_field.dart';
 import 'package:watch_store/widgets/main_button.dart';
 
-class VerifyCodeScreen extends StatelessWidget {
+class VerifyCodeScreen extends StatefulWidget {
   VerifyCodeScreen({super.key});
+
+  @override
+  State<VerifyCodeScreen> createState() => _VerifyCodeScreenState();
+}
+
+class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTimer();
+  }
+
+  late Timer _timer;
+  int _start = 10;
+
+  startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (timer) {
+      setState(() {
+        if (_start == 0) {
+          _timer.cancel();
+          Navigator.of(context).pop();
+        } else {
+          _start--;
+        }
+      });
+    });
+  }
+
+  String formatTime(int sec) {
+    int min = sec ~/ 60;
+    int seconds = sec % 60;
+
+    String minStr = min.toString().padLeft(2, "0");
+    String secondsStr = seconds.toString().padLeft(2, "0");
+    return '$minStr:$secondsStr';
+  }
+
   @override
   Widget build(BuildContext context) {
     final moblieRouteArg = ModalRoute.of(context)!.settings.arguments as String;
@@ -34,16 +75,19 @@ class VerifyCodeScreen extends StatelessWidget {
               style: AppTextStyles.title,
             ),
             AppDimens.small.height,
-            const Text(
-              AppStrings.wrongNumberEditNumber,
-              style: AppTextStyles.primaryThemeTextStyle,
+            GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Text(
+                AppStrings.wrongNumberEditNumber,
+                style: AppTextStyles.primaryThemeTextStyle,
+              ),
             ),
             AppDimens.large.height,
             AppTextField(
               lable: AppStrings.enterVerificationCode,
               hint: AppStrings.hintVerificationCode,
               controller: _controller,
-              prefixLable: "2:56",
+              prefixLable: formatTime(_start),
             ),
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
