@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watch_store/component/themes.dart';
-import 'package:watch_store/route/names.dart';
 import 'package:watch_store/route/routes.dart';
 import 'package:watch_store/screens/auth/cubit/auth_cubit.dart';
 import 'package:watch_store/screens/auth/send_sms_screen.dart';
 import 'package:watch_store/screens/mainscreen/main_screen.dart';
+import 'package:watch_store/utils/shared_preferences_manager.dart';
 
-void main() {
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferencesManager().init();
   runApp(const MyApp());
 }
 

@@ -30,7 +30,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   }
 
   late Timer _timer;
-  int _start = 10;
+  int _start = 120;
 
   startTimer() {
     const oneSec = Duration(seconds: 1);
