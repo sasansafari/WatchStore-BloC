@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:watch_store/component/text_style.dart';
 import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/res/strings.dart';
+import 'package:watch_store/utils/image_handler.dart';
 import 'package:watch_store/widgets/app_text_field.dart';
 import 'package:watch_store/widgets/avatar.dart';
 import 'package:watch_store/widgets/main_button.dart';
@@ -13,9 +15,17 @@ import 'package:watch_store/widgets/registeration_app_bar.dart';
 
 import '../route/names.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _controllerNameLastName = TextEditingController();
+
+  ImageHandler imageHandler = ImageHandler();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +42,11 @@ class RegisterScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AppDimens.large.height,
-                  const Avatar(),
+                  Avatar(
+                      onTap: () async => await imageHandler
+                          .pickAndCropImage(source: ImageSource.gallery)
+                          .then((value) => setState(() {})),
+                      file: imageHandler.getImage),
                   AppTextField(
                       lable: AppStrings.nameLastName,
                       hint: AppStrings.hintNameLastName,
