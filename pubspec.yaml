@@ -41,6 +41,8 @@ dependencies:
   dio: ^5.4.0
   flutter_bloc: ^8.1.3
   shared_preferences: ^2.2.2
+  image_cropper: ^4.0.1
+  image_picker: ^1.0.7
   
 
 dev_dependencies:

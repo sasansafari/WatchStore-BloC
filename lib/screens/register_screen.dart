@@ -55,7 +55,10 @@ class RegisterScreen extends StatelessWidget {
                     controller: _controllerNameLastName,
                     icon: const Icon(Icons.location_on),
                   ),
-                  MainButton(text: AppStrings.next, onPressed:  () => Navigator.pushNamed(context, ScreenNames.mainScreen)),
+                  MainButton(
+                      text: AppStrings.next,
+                      onPressed: () =>
+                          Navigator.pushNamed(context, ScreenNames.mainScreen)),
                   AppDimens.large.height,
                 ],
               ),

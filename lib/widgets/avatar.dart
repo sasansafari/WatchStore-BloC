@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:watch_store/component/text_style.dart';
@@ -19,8 +18,10 @@ class Avatar extends StatelessWidget {
           child: Image.asset(Assets.png.avatar.path),
         ),
         AppDimens.medium.height,
-          Text(AppStrings.chooseProfileImage,style: AppTextStyles.avatarText,)
-        
+        Text(
+          AppStrings.chooseProfileImage,
+          style: AppTextStyles.avatarText,
+        )
       ],
     );
   }
