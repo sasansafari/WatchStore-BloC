@@ -23,8 +23,8 @@ class Avatar extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(1000),
               child: file == null
-                  ? Image.asset(Assets.png.avatar.path)
-                  : Image.file(file),
+                  ? Image.asset(Assets.png.avatar.path,fit:BoxFit.fill)
+                  : Image.file(file,fit:BoxFit.fill),
             ),
           ),
           AppDimens.medium.height,

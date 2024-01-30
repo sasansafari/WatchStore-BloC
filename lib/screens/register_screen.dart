@@ -13,6 +13,8 @@ import 'package:watch_store/widgets/main_button.dart';
 import 'package:watch_store/component/extention.dart';
 import 'package:watch_store/widgets/registeration_app_bar.dart';
 
+import '../component/button_style.dart';
+import '../res/colors.dart';
 import '../route/names.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -43,9 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   AppDimens.large.height,
                   Avatar(
-                      onTap: () async => await imageHandler
-                          .pickAndCropImage(source: ImageSource.gallery)
-                          .then((value) => setState(() {})),
+                      onTap: () {   pickImageFromCameraOrGallery(context, size);},
                       file: imageHandler.getImage),
                   AppTextField(
                       lable: AppStrings.nameLastName,
@@ -81,5 +81,72 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> pickImageFromCameraOrGallery(BuildContext context, Size size) {
+    return showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Container(
+                    height: size.height / 5,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(30)),
+                        color: Colors.white),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: size.width / 1.8,
+                          child: ElevatedButton(
+                              style: AppButtonStyles.mainButtonStyle.copyWith(
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll(
+                                          AppColors.primaryColor)),
+                              onPressed: () async => await imageHandler
+                                  .pickAndCropImage(
+                                      source: ImageSource.gallery)
+                                  .then((value) => setState(() {})),
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.photo_library,
+                                      color: Colors.white),
+                                  Text('انتخاب عکس از گالری',
+                                      style: AppTextStyles.mainbuttn),
+                                ],
+                              )),
+
+
+                              
+                        ),
+                        SizedBox(
+                          width: size.width / 1.8,
+                          child: ElevatedButton(
+                              style: AppButtonStyles.mainButtonStyle.copyWith(
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll(
+                                          AppColors.primaryColor)),
+                              onPressed: () async => await imageHandler
+                                  .pickAndCropImage(
+                                      source: ImageSource.camera)
+                                  .then((value) => setState(() {})),
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.camera_alt_outlined,
+                                      color: Colors.white),
+                                  Text('انتخاب عکس از دوربین',
+                                      style: AppTextStyles.mainbuttn),
+                                ],
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
   }
 }
