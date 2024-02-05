@@ -16,7 +16,7 @@ abstract class AppStrings {
   static const String sendToAddress = "ارسال به آدرس";
   static const String address = "آدرس";
   static const String postalCode = "کد پستی";
-  static const String location = "موقعیت مکانی";
+  static const String location = "انتخاب موقعیت مکانی";
   static const String hintNameLastName =
       "نام و نام خانوادگی خود را با حروف فارسی وارد کنید";
   static const String hintHomeNumber =
