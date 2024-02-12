@@ -23,7 +23,7 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     final response =
         await httpClient.get(Endpoints.productsByBrand + id.toString());
     HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    for (var elemnt in (response.data['all_products']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
 
@@ -37,7 +37,7 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     final response =
         await httpClient.get(Endpoints.productsByCategory + id.toString());
     HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    for (var elemnt in (response.data['all_products']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
 
@@ -52,7 +52,7 @@ class ProductRemoteDataSrc implements IProductDataSrc {
     debugPrint(response.statusCode.toString());
     HTTPResponseValidator.isValidStatusCode(response.statusCode!);
     debugPrint(response.data.toString());
-    for (var elemnt in response.data['data'] as List) {
+    for (var elemnt in response.data['all_products']['data'] as List) {
       products.add(Product.fromJson(elemnt));
     }
 
@@ -65,7 +65,7 @@ class ProductRemoteDataSrc implements IProductDataSrc {
 
     final response = await httpClient.get(Endpoints.baseUrl + searchKey);
     HTTPResponseValidator.isValidStatusCode(response.statusCode!);
-    for (var elemnt in (response.data['data'] as List)) {
+    for (var elemnt in (response.data['all_products']['data'] as List)) {
       products.add(Product.fromJson(elemnt));
     }
 

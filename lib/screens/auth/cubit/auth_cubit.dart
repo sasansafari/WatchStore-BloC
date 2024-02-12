@@ -14,7 +14,7 @@ class AuthCubit extends Cubit<AuthState> {
     //isStore = F
     // emit(LoggedOutState());
 
-    emit(LoggedOutState());
+    emit(LoggedInState());
   }
 
   final Dio _dio = Dio();
