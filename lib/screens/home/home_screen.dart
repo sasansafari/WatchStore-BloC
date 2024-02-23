@@ -44,30 +44,24 @@ class HomeScreen extends StatelessWidget {
                         imgList: state.home.sliders,
                       ),
                       //cat..
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CatWidget(
-                              colors: AppColors.catDesktopColors,
-                              ontap: () {},
-                              title: AppStrings.desktop,
-                              iconPath: Assets.svg.desktop),
-                          CatWidget(
-                              colors: AppColors.catDigitalColors,
-                              ontap: () {},
-                              title: AppStrings.digital,
-                              iconPath: Assets.svg.digital),
-                          CatWidget(
-                              colors: AppColors.catSmartColors,
-                              ontap: () {},
-                              title: AppStrings.smart,
-                              iconPath: Assets.svg.smart),
-                          CatWidget(
-                              colors: AppColors.catClasicColors,
-                              ontap: () {},
-                              title: AppStrings.classic,
-                              iconPath: Assets.svg.clasic),
-                        ],
+                      SizedBox(
+                        height: 150,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.home.categories.length,
+                            itemBuilder: (c, i) {
+                              return CatWidget(
+                                  colors: i.isEven
+                                      ? AppColors.catDesktopColors
+                                      : AppColors.catDigitalColors,
+                                  ontap: () {
+                                    print(
+                                        "Id is : ${state.home.categories[i].id}");
+                                    // to product list screen
+                                  },
+                                  title: state.home.categories[i].title,
+                                  iconPath: state.home.categories[i].image);
+                            }),
                       ),
 
                       AppDimens.large.height,
@@ -78,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(
-                              height: 300,
+                              height: 400,
                               child: ListView.builder(
                                   physics: const ClampingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
@@ -90,7 +84,12 @@ class HomeScreen extends StatelessWidget {
                                             .home.amazingProducts[index].title,
                                         price: state
                                             .home.amazingProducts[index].price,
-                                        time: 10,
+                                        // specialExpiration: state
+                                        //     .home
+                                        //     .amazingProducts[index]
+                                        //     .specialExpiration,
+                                        specialExpiration:
+                                            "2024-02-23 00:00:00",
                                         discount: state.home
                                             .amazingProducts[index].discount,
                                       ))),

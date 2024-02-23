@@ -41,7 +41,7 @@ class CatWidget extends StatelessWidget {
               children: [
                 SizedBox(
                     height: 60,
-                    child: SvgPicture.asset(
+                    child: Image.network(
                       iconPath,
                     )),
               ],
@@ -52,7 +52,7 @@ class CatWidget extends StatelessWidget {
           ),
           Text(
             title,
-            style: AppTextStyles.title.copyWith(fontSize: 18),
+            style: AppTextStyles.title.copyWith(fontSize: 12),
           )
         ],
       ),
