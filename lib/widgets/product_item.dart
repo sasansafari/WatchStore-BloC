@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:watch_store/component/extention.dart';
 import 'package:watch_store/component/text_style.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/utils/format_time.dart';
 
 class ProductItem extends StatefulWidget {
   const ProductItem(
@@ -26,7 +29,8 @@ class ProductItem extends StatefulWidget {
 
 class _ProductItemState extends State<ProductItem> {
   Duration _duration = Duration(seconds: 0);
-
+  late Timer _timer;
+  late int insecond;
   @override
   void initState() {
     // TODO: implement initState
@@ -35,12 +39,8 @@ class _ProductItemState extends State<ProductItem> {
     DateTime now = DateTime.now();
     DateTime expiration = DateTime.parse(widget.specialExpiration);
     _duration = now.difference(expiration).abs();
-
-    int hours = _duration.inHours;
-    int minutes = _duration.inMinutes.remainder(60);
-    int seconds = _duration.inSeconds.remainder(60);
-
-    print("$hours:$minutes:$seconds");
+    insecond = _duration.inSeconds;
+    startTimer();
   }
 
   @override
@@ -106,12 +106,25 @@ class _ProductItemState extends State<ProductItem> {
           AppDimens.medium.height,
           Visibility(
               visible: _duration.inSeconds > 0 ? true : false,
-              child: const Text(
-                "09:26:22",
+              child: Text(
+                formatTime(insecond),
                 style: AppTextStyles.prodTimerStyle,
               ))
         ],
       ),
     );
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (timer) {
+      setState(() {
+        if (insecond == 0) {
+          debugPrint("product onTap limited");
+        } else {
+          insecond--;
+        }
+      });
+    });
   }
 }
