@@ -6,6 +6,7 @@ import 'package:watch_store/component/text_style.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/screens/product_single/product_single_screen.dart';
 import 'package:watch_store/utils/format_time.dart';
 
 class ProductItem extends StatefulWidget {
@@ -15,8 +16,9 @@ class ProductItem extends StatefulWidget {
       required this.price,
       this.discount = 0,
       this.specialExpiration = "",
-      this.oldPreice = 0});
-
+      this.oldPreice = 0,
+      required this.id});
+  final id;
   final productName;
   final int price;
   final int oldPreice;
@@ -47,72 +49,80 @@ class _ProductItemState extends State<ProductItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppDimens.small),
-      margin: const EdgeInsets.all(AppDimens.medium),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppDimens.medium),
-          gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: AppColors.productBgGradiant)),
-      width: 200,
-      child: Column(
-        children: [
-          Image.asset(Assets.png.unnamed.path),
-          Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                widget.productName,
-                style: AppTextStyles.productTitle,
-              )),
-          AppDimens.medium.height,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    " ${widget.price.separateWithComma} تومان",
-                    style: AppTextStyles.title,
-                  ),
-                  Visibility(
-                      visible: widget.discount > 0 ? true : false,
-                      child: Text(
-                        widget.oldPreice.separateWithComma,
-                        style: AppTextStyles.oldPriceStyle,
-                      )),
-                ],
-              ),
-              Visibility(
-                visible: widget.discount > 0 ? true : false,
-                child: Container(
-                  padding: const EdgeInsets.all(AppDimens.small * .5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60),
-                      color: Colors.red),
-                  child: Text("${widget.discount} %"),
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProductSingleScreen(
+                    id: widget.id,
+                  ))),
+      child: Container(
+        padding: const EdgeInsets.all(AppDimens.small),
+        margin: const EdgeInsets.all(AppDimens.medium),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppDimens.medium),
+            gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: AppColors.productBgGradiant)),
+        width: 200,
+        child: Column(
+          children: [
+            Image.asset(Assets.png.unnamed.path),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  widget.productName,
+                  style: AppTextStyles.productTitle,
+                )),
+            AppDimens.medium.height,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      " ${widget.price.separateWithComma} تومان",
+                      style: AppTextStyles.title,
+                    ),
+                    Visibility(
+                        visible: widget.discount > 0 ? true : false,
+                        child: Text(
+                          widget.oldPreice.separateWithComma,
+                          style: AppTextStyles.oldPriceStyle,
+                        )),
+                  ],
                 ),
-              )
-            ],
-          ),
-          AppDimens.large.height,
-          Visibility(
-              visible: _duration.inSeconds > 0 ? true : false,
-              child: Container(
-                height: 2,
-                width: double.infinity,
-                color: Colors.blue,
-              )),
-          AppDimens.medium.height,
-          Visibility(
-              visible: _duration.inSeconds > 0 ? true : false,
-              child: Text(
-                formatTime(insecond),
-                style: AppTextStyles.prodTimerStyle,
-              ))
-        ],
+                Visibility(
+                  visible: widget.discount > 0 ? true : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(AppDimens.small * .5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(60),
+                        color: Colors.red),
+                    child: Text("${widget.discount} %"),
+                  ),
+                )
+              ],
+            ),
+            AppDimens.large.height,
+            Visibility(
+                visible: _duration.inSeconds > 0 ? true : false,
+                child: Container(
+                  height: 2,
+                  width: double.infinity,
+                  color: Colors.blue,
+                )),
+            AppDimens.medium.height,
+            Visibility(
+                visible: _duration.inSeconds > 0 ? true : false,
+                child: Text(
+                  formatTime(insecond),
+                  style: AppTextStyles.prodTimerStyle,
+                ))
+          ],
+        ),
       ),
     );
   }

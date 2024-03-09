@@ -64,6 +64,7 @@ class ProductListScreen extends StatelessWidget {
                                       mainAxisSpacing: 2,
                                       childAspectRatio: 0.5),
                               itemBuilder: (context, index) => ProductItem(
+                                  id: state.productList[index].id,
                                   productName: state.productList[index].title,
                                   discount: state.productList[index].discount,
                                   oldPreice:

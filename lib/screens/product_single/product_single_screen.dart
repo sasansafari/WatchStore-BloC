@@ -1,85 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:watch_store/component/extention.dart';
 import 'package:watch_store/component/text_style.dart';
+import 'package:watch_store/data/repo/product_repo.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/screens/product_single/bloc/product_single_bloc.dart';
 import 'package:watch_store/widgets/app_bar.dart';
 import 'package:watch_store/widgets/cart_badge.dart';
 
 class ProductSingleScreen extends StatelessWidget {
-  const ProductSingleScreen({super.key});
+  final id;
+  const ProductSingleScreen({super.key, this.id});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      appBar: CustomAppBar(
-          child: Row(
-        children: [
-          const CartBadge(),
-          const Expanded(
-              child: Text(
-            'product name',
-            style: AppTextStyles.productTitle,
-            textDirection: TextDirection.rtl,
-          )),
-          IconButton(onPressed: () {}, icon: SvgPicture.asset(Assets.svg.close))
-        ],
-      )),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Image.asset(
-                  Assets.png.unnamed.path,
-                  fit: BoxFit.cover,
-                  width: MediaQuery.sizeOf(context).width,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(AppDimens.medium),
-                  padding: const EdgeInsets.all(AppDimens.medium),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppDimens.medium),
-                      color: Colors.white),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Text(
-                        "بنسر",
-                        style: AppTextStyles.productTitle,
-                        textDirection: TextDirection.rtl,
-                      ),
-                      Text(
-                        "مسواک بنسر مدل اکسترا با برس متوسط 3 عددی",
-                        style: AppTextStyles.caption,
-                        textDirection: TextDirection.rtl,
-                      ),
-                      const Divider(),
-                      ProductTabView(),
-                      60.0.height
-                    ],
+    return BlocProvider(
+      create: (context) {
+        final productBloc = ProductSingleBloc(productRepository);
+        productBloc.add(ProductSingleInit(id: id));
+        return productBloc;
+      },
+      child: BlocConsumer<ProductSingleBloc, ProductSingleState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          if (state is ProductSingleLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is ProductSingleLoaded) {
+            return SafeArea(
+                child: Scaffold(
+              appBar: CustomAppBar(
+                  child: Row(
+                children: [
+                  const CartBadge(),
+                  Expanded(
+                      child: Text(
+                    state.productDetailes.title ?? "بدون نام",
+                    style: AppTextStyles.productTitle,
+                    textDirection: TextDirection.rtl,
+                  )),
+                  IconButton(
+                      onPressed: () {},
+                      icon: SvgPicture.asset(Assets.svg.close))
+                ],
+              )),
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          Assets.png.unnamed.path,
+                          fit: BoxFit.cover,
+                          width: MediaQuery.sizeOf(context).width,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(AppDimens.medium),
+                          padding: const EdgeInsets.all(AppDimens.medium),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(AppDimens.medium),
+                              color: Colors.white),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Text(
+                                "بنسر",
+                                style: AppTextStyles.productTitle,
+                                textDirection: TextDirection.rtl,
+                              ),
+                              Text(
+                                "مسواک بنسر مدل اکسترا با برس متوسط 3 عددی",
+                                style: AppTextStyles.caption,
+                                textDirection: TextDirection.rtl,
+                              ),
+                              const Divider(),
+                              ProductTabView(),
+                              60.0.height
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.blue,
-              height: 60,
-              width: double.infinity,
-            ),
-          )
-        ],
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      color: Colors.blue,
+                      height: 60,
+                      width: double.infinity,
+                    ),
+                  )
+                ],
+              ),
+            ));
+          } else if (state is ProductSingleError) {
+            return Text("error");
+          } else {
+            throw Exception("invalid");
+          }
+        },
       ),
-    ));
+    );
   }
 }
 
