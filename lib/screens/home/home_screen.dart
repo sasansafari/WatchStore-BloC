@@ -9,6 +9,7 @@ import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/res/strings.dart';
 import 'package:watch_store/screens/home/bloc/home_bloc.dart';
+import 'package:watch_store/screens/product_list/product_list_screen.dart';
 import 'package:watch_store/widgets/app_slider.dart';
 import 'package:watch_store/widgets/cat_widget.dart';
 import 'package:watch_store/widgets/product_item.dart';
@@ -54,11 +55,12 @@ class HomeScreen extends StatelessWidget {
                                   colors: i.isEven
                                       ? AppColors.catDesktopColors
                                       : AppColors.catDigitalColors,
-                                  ontap: () {
-                                    print(
-                                        "Id is : ${state.home.categories[i].id}");
-                                    // to product list screen
-                                  },
+                                  ontap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProductListScreen(
+                                            param: state.home.categories[i].id),
+                                      )),
                                   title: state.home.categories[i].title,
                                   iconPath: state.home.categories[i].image);
                             }),

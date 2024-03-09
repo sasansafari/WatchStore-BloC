@@ -18,8 +18,8 @@ class ProductItem extends StatefulWidget {
       this.oldPreice = 0});
 
   final productName;
-  final price;
-  final oldPreice;
+  final int price;
+  final int oldPreice;
   final discount;
   final specialExpiration;
 
@@ -30,17 +30,19 @@ class ProductItem extends StatefulWidget {
 class _ProductItemState extends State<ProductItem> {
   Duration _duration = Duration(seconds: 0);
   late Timer _timer;
-  late int insecond;
+  int insecond = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    DateTime now = DateTime.now();
-    DateTime expiration = DateTime.parse(widget.specialExpiration);
-    _duration = now.difference(expiration).abs();
-    insecond = _duration.inSeconds;
-    startTimer();
+    _timer = Timer(_duration, () {});
+    if (widget.specialExpiration != "") {
+      DateTime now = DateTime.now();
+      DateTime expiration = DateTime.parse(widget.specialExpiration);
+      _duration = now.difference(expiration).abs();
+      insecond = _duration.inSeconds;
+      startTimer();
+    }
   }
 
   @override
@@ -72,13 +74,13 @@ class _ProductItemState extends State<ProductItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    " ${600000.separateWithComma} تومان",
+                    " ${widget.price.separateWithComma} تومان",
                     style: AppTextStyles.title,
                   ),
                   Visibility(
                       visible: widget.discount > 0 ? true : false,
                       child: Text(
-                        80000000.separateWithComma,
+                        widget.oldPreice.separateWithComma,
                         style: AppTextStyles.oldPriceStyle,
                       )),
                 ],

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:watch_store/data/model/product.dart';
 import 'package:watch_store/data/src/product_data_src.dart';
 
@@ -28,3 +29,5 @@ class ProductRepository implements IProductReop {
   Future<List<Product>> searchProducts(String searchKey) =>
       _iProductDataSrc.searchProducts(searchKey);
 }
+
+final productRepository = ProductRepository(ProductRemoteDataSrc(Dio()));
