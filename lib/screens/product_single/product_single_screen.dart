@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:watch_store/component/extention.dart';
 import 'package:watch_store/component/text_style.dart';
+import 'package:watch_store/data/model/product_details.dart';
 import 'package:watch_store/data/repo/product_repo.dart';
 import 'package:watch_store/gen/assets.gen.dart';
+import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/screens/product_single/bloc/product_single_bloc.dart';
 import 'package:watch_store/widgets/app_bar.dart';
@@ -40,13 +42,15 @@ class ProductSingleScreen extends StatelessWidget {
                 children: [
                   const CartBadge(),
                   Expanded(
-                      child: Text(
-                    state.productDetailes.title ?? "بدون نام",
-                    style: AppTextStyles.productTitle,
-                    textDirection: TextDirection.rtl,
+                      child: FittedBox(
+                    child: Text(
+                      state.productDetailes.title ?? "بدون نام",
+                      style: AppTextStyles.productTitle,
+                      textDirection: TextDirection.rtl,
+                    ),
                   )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pop(context),
                       icon: SvgPicture.asset(Assets.svg.close))
                 ],
               )),
@@ -55,10 +59,11 @@ class ProductSingleScreen extends StatelessWidget {
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        Image.asset(
-                          Assets.png.unnamed.path,
+                        Image.network(
+                          state.productDetailes.image!,
                           fit: BoxFit.cover,
-                          width: MediaQuery.sizeOf(context).width,
+                          // width: MediaQuery.sizeOf(context).width,
+                          scale: 1,
                         ),
                         Container(
                           margin: const EdgeInsets.all(AppDimens.medium),
@@ -67,22 +72,23 @@ class ProductSingleScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(AppDimens.medium),
-                              color: Colors.white),
+                              color: AppColors.mainBg),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text(
-                                "بنسر",
+                              Text(
+                                state.productDetailes.brand!,
                                 style: AppTextStyles.productTitle,
                                 textDirection: TextDirection.rtl,
                               ),
                               Text(
-                                "مسواک بنسر مدل اکسترا با برس متوسط 3 عددی",
+                                state.productDetailes.title!,
                                 style: AppTextStyles.caption,
                                 textDirection: TextDirection.rtl,
                               ),
                               const Divider(),
-                              ProductTabView(),
+                              ProductTabView(
+                                  productDetailes: state.productDetailes),
                               60.0.height
                             ],
                           ),
@@ -91,15 +97,15 @@ class ProductSingleScreen extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      color: Colors.blue,
-                      height: 60,
-                      width: double.infinity,
-                    ),
-                  )
+                      bottom: 0,
+                      left: AppDimens.large,
+                      right: AppDimens.large,
+                      child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text(
+                            "افزودن به سبد خرید",
+                            style: AppTextStyles.mainbuttn,
+                          )))
                 ],
               ),
             ));
@@ -115,7 +121,8 @@ class ProductSingleScreen extends StatelessWidget {
 }
 
 class ProductTabView extends StatefulWidget {
-  const ProductTabView({super.key});
+  final ProductDetailes productDetailes;
+  const ProductTabView({super.key, required this.productDetailes});
 
   @override
   State<ProductTabView> createState() => _ProductTabViewState();
@@ -148,7 +155,15 @@ class _ProductTabViewState extends State<ProductTabView> {
         ),
         IndexedStack(
           index: seletedTabIndex,
-          children: [Review(), Comments(), Features()],
+          children: [
+            Review(
+              text: widget.productDetailes.discussion,
+            ),
+            CommentsList(comments: widget.productDetailes.comments!),
+            PropertiesList(
+              properties: widget.productDetailes.properties!,
+            )
+          ],
         )
       ],
     );
@@ -161,37 +176,69 @@ List<String> tabs = [
   "خصوصیات",
 ];
 
-class Features extends StatelessWidget {
-  const Features({super.key});
+class PropertiesList extends StatelessWidget {
+  final List<Properties> properties;
+  const PropertiesList({super.key, required this.properties});
 
   @override
   Widget build(BuildContext context) {
-    return Text("""
+    return Expanded(
+        child: ListView.builder(
+      physics: const ClampingScrollPhysics(),
+      itemCount: properties.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppDimens.medium),
+          margin: const EdgeInsets.all(AppDimens.medium),
+          color: AppColors.surfaceColor,
+          child: Text(
+            "${properties[index].property} : ${properties[index].value}",
+            style: AppTextStyles.caption,
+            textAlign: TextAlign.right,
+          ),
+        );
+      },
+    ));
+  }
+}
 
-خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  
-خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  
-خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  
-خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  
-خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  
-خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات  خصوصیات
-""");
+class CommentsList extends StatelessWidget {
+  final List<Comments> comments;
+
+  const CommentsList({super.key, required this.comments});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: ListView.builder(
+      physics: const ClampingScrollPhysics(),
+      itemCount: comments.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppDimens.medium),
+          margin: const EdgeInsets.all(AppDimens.medium),
+          color: AppColors.surfaceColor,
+          child: Text(
+            "${comments[index].user} : ${comments[index].body}",
+            style: AppTextStyles.caption,
+            textAlign: TextAlign.right,
+          ),
+        );
+      },
+    ));
   }
 }
 
 class Review extends StatelessWidget {
-  const Review({super.key});
+  final text;
+  const Review({super.key, this.text});
 
   @override
   Widget build(BuildContext context) {
-    return Text("Review");
-  }
-}
-
-class Comments extends StatelessWidget {
-  const Comments({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text("Comments");
+    return Text(text);
   }
 }
