@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:watch_store/data/product_repo_test.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/screens/mainscreen/cart_screen.dart';
@@ -34,7 +33,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ProductRepoTest().getProduct();
   }
 
   late final map = {
