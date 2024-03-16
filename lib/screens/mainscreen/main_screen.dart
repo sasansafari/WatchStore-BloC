@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
-import 'package:watch_store/screens/mainscreen/cart_screen.dart';
+import 'package:watch_store/screens/cart/cart_screen.dart';
 import 'package:watch_store/screens/mainscreen/profile_screen.dart';
 import 'package:watch_store/widgets/btm_nav_item.dart';
 

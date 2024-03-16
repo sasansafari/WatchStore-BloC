@@ -5,10 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:watch_store/component/extention.dart';
 import 'package:watch_store/component/text_style.dart';
 import 'package:watch_store/data/model/product_details.dart';
+import 'package:watch_store/data/repo/cart_repo.dart';
 import 'package:watch_store/data/repo/product_repo.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
+import 'package:watch_store/screens/cart/bloc/cart_bloc.dart';
 import 'package:watch_store/screens/product_single/bloc/product_single_bloc.dart';
 import 'package:watch_store/widgets/app_bar.dart';
 import 'package:watch_store/widgets/cart_badge.dart';
@@ -19,12 +21,19 @@ class ProductSingleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final productBloc = ProductSingleBloc(productRepository);
-        productBloc.add(ProductSingleInit(id: id));
-        return productBloc;
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final productBloc = ProductSingleBloc(productRepository);
+            productBloc.add(ProductSingleInit(id: id));
+            return productBloc;
+          },
+        ),
+        BlocProvider(
+          create: (context) => CartBloc(cartRepository),
+        ),
+      ],
       child: BlocConsumer<ProductSingleBloc, ProductSingleState>(
         listener: (context, state) {
           // TODO: implement listener
@@ -96,16 +105,44 @@ class ProductSingleScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Positioned(
-                      bottom: 0,
-                      left: AppDimens.large,
-                      right: AppDimens.large,
-                      child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "افزودن به سبد خرید",
-                            style: AppTextStyles.mainbuttn,
-                          )))
+                  BlocConsumer<CartBloc, CartState>(
+                    listener: (cartContext, cartState) {
+                      if (cartState is CartItemAddedState) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: Duration(seconds: 1),
+                            backgroundColor: AppColors.success,
+                            content: Text(
+                              "با موفقیت به سبد خرید افزوده شد",
+                              style: AppTextStyles.caption
+                                  .copyWith(color: AppColors.onSuccess),
+                              textAlign: TextAlign.center,
+                            )));
+                      }
+                    },
+                    builder: (cartContext, cartState) {
+                      if (cartState is CartLoadingState) {
+                        return const Positioned(
+                            bottom: 0,
+                            left: AppDimens.large,
+                            right: AppDimens.large,
+                            child: LinearProgressIndicator());
+                      }
+                      return Positioned(
+                          bottom: 0,
+                          left: AppDimens.large,
+                          right: AppDimens.large,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                print(state.productDetailes.id!);
+                                BlocProvider.of<CartBloc>(context).add(
+                                    AddToCartEvent(state.productDetailes.id!));
+                              },
+                              child: const Text(
+                                "افزودن به سبد خرید",
+                                style: AppTextStyles.mainbuttn,
+                              )));
+                    },
+                  )
                 ],
               ),
             ));
@@ -182,8 +219,7 @@ class PropertiesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.builder(
+    return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: properties.length,
       shrinkWrap: true,
@@ -200,7 +236,7 @@ class PropertiesList extends StatelessWidget {
           ),
         );
       },
-    ));
+    );
   }
 }
 
@@ -211,8 +247,7 @@ class CommentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.builder(
+    return ListView.builder(
       physics: const ClampingScrollPhysics(),
       itemCount: comments.length,
       shrinkWrap: true,
@@ -229,7 +264,7 @@ class CommentsList extends StatelessWidget {
           ),
         );
       },
-    ));
+    );
   }
 }
 
