@@ -18,18 +18,22 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           final cartList = await _cartRepository.getUserCart();
           emit(CartLoadedState(cartList));
         } else if (event is RemoveFromCartEvent) {
+          emit(CartLoadingState());
+
           await _cartRepository
               .removeFromCart(productId: event.productId)
-              .then((value) => emit(CartItemRemovedState()));
+              .then((value) => emit(CartItemRemovedState(value)));
         } else if (event is DeleteFromCart) {
+          emit(CartLoadingState());
+
           await _cartRepository
               .deleteFromCart(productId: event.productId)
-              .then((value) => emit(CartItemDeletedState()));
+              .then((value) => emit(CartItemDeletedState(value)));
         } else if (event is AddToCartEvent) {
           emit(CartLoadingState());
           await _cartRepository
               .addToCart(productId: event.productId)
-              .then((value) => emit(CartItemAddedState()));
+              .then((value) => emit(CartItemAddedState(value)));
         } else if (event is CartItemCountEvent) {
           await _cartRepository
               .countCartItems()

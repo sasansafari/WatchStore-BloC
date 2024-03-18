@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:watch_store/component/text_style.dart';
+import 'package:watch_store/data/model/cart.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/dimens.dart';
 import 'package:watch_store/res/strings.dart';
+import 'package:watch_store/screens/cart/bloc/cart_bloc.dart';
 import 'package:watch_store/widgets/app_bar.dart';
 import 'package:watch_store/widgets/shopping_cart_item.dart';
 
@@ -12,6 +15,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<CartBloc>(context).add(CartInitEvent());
     var size = MediaQuery.sizeOf(context);
     return SafeArea(
         child: Scaffold(
@@ -61,13 +65,29 @@ class CartScreen extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: ListView.builder(itemBuilder: ((context, index) {
-            return ShoppingCartItem(
-              oldPrice: 500000,
-              price: 100000,
-              productTitle: "ساعت شیائومی mi Watch lite",
-            );
-          }))),
+          BlocBuilder<CartBloc, CartState>(
+            builder: (context, state) {
+              if (state is CartLoadedState) {
+                return CartList(list: state.cartList);
+              } else if (state is CartItemAddedState) {
+                return CartList(list: state.cartList);
+              } else if (state is CartItemDeletedState) {
+                return CartList(list: state.cartList);
+              } else if (state is CartItemRemovedState) {
+                return CartList(list: state.cartList);
+              } else if (state is CartErrorState) {
+                return const Text('error');
+              } else if (state is CartLoadingState) {
+                return const LinearProgressIndicator();
+              } else {
+                return ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<CartBloc>(context).add(CartInitEvent());
+                    },
+                    child: const Text("تلاش مجدد"));
+              }
+            },
+          ),
           Container(
             height: 50,
             width: double.infinity,
@@ -76,5 +96,29 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     ));
+  }
+}
+
+class CartList extends StatelessWidget {
+  List<CartModel> list;
+  CartList({super.key, required this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: list.length,
+            itemBuilder: ((context, index) {
+              final cartBloc = BlocProvider.of<CartBloc>(context);
+              return ShoppingCartItem(
+                productTitle: "ساعت شیائومی mi Watch lite",
+                count: list[index].count,
+                add: () => cartBloc.add(AddToCartEvent(list[index].productId)),
+                remove: () =>
+                    cartBloc.add(RemoveFromCartEvent(list[index].productId)),
+                delete: () =>
+                    cartBloc.add(DeleteFromCart(list[index].productId)),
+              );
+            })));
   }
 }

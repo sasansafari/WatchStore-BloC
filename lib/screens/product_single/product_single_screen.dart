@@ -21,23 +21,12 @@ class ProductSingleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) {
-            final productBloc = ProductSingleBloc(productRepository);
-            productBloc.add(ProductSingleInit(id: id));
-            return productBloc;
-          },
-        ),
-        BlocProvider(
-          create: (context) {
-            final cartBloc = CartBloc(cartRepository);
-            cartBloc.add(CartItemCountEvent());
-            return cartBloc;
-          },
-        ),
-      ],
+    return BlocProvider(
+      create: (context) {
+        final productBloc = ProductSingleBloc(productRepository);
+        productBloc.add(ProductSingleInit(id: id));
+        return productBloc;
+      },
       child: BlocBuilder<ProductSingleBloc, ProductSingleState>(
         builder: (context, state) {
           if (state is ProductSingleLoading) {
