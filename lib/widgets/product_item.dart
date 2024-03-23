@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:watch_store/component/extention.dart';
 import 'package:watch_store/component/text_style.dart';
+import 'package:watch_store/data/model/product.dart';
 import 'package:watch_store/gen/assets.gen.dart';
 import 'package:watch_store/res/colors.dart';
 import 'package:watch_store/res/dimens.dart';
@@ -10,20 +11,11 @@ import 'package:watch_store/screens/product_single/product_single_screen.dart';
 import 'package:watch_store/utils/format_time.dart';
 
 class ProductItem extends StatefulWidget {
-  const ProductItem(
-      {super.key,
-      required this.productName,
-      required this.price,
-      this.discount = 0,
-      this.specialExpiration = "",
-      this.oldPreice = 0,
-      required this.id});
-  final id;
-  final productName;
-  final int price;
-  final int oldPreice;
-  final discount;
-  final specialExpiration;
+  ProductItem({
+    super.key,
+    required this.product,
+  });
+  Product product;
 
   @override
   State<ProductItem> createState() => _ProductItemState();
@@ -38,9 +30,9 @@ class _ProductItemState extends State<ProductItem> {
     // TODO: implement initState
     super.initState();
     _timer = Timer(_duration, () {});
-    if (widget.specialExpiration != "") {
+    if (widget.product.specialExpiration != "") {
       DateTime now = DateTime.now();
-      DateTime expiration = DateTime.parse(widget.specialExpiration);
+      DateTime expiration = DateTime.parse(widget.product.specialExpiration);
       _duration = now.difference(expiration).abs();
       insecond = _duration.inSeconds;
       startTimer();
@@ -54,7 +46,7 @@ class _ProductItemState extends State<ProductItem> {
           context,
           MaterialPageRoute(
               builder: (context) => ProductSingleScreen(
-                    id: widget.id,
+                    id: widget.product.id,
                   ))),
       child: Container(
         padding: const EdgeInsets.all(AppDimens.small),
@@ -68,11 +60,11 @@ class _ProductItemState extends State<ProductItem> {
         width: 200,
         child: Column(
           children: [
-            Image.asset(Assets.png.unnamed.path),
+            Image.network(widget.product.image),
             Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  widget.productName,
+                  widget.product.title,
                   style: AppTextStyles.productTitle,
                 )),
             AppDimens.medium.height,
@@ -83,25 +75,25 @@ class _ProductItemState extends State<ProductItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      " ${widget.price.separateWithComma} تومان",
+                      " ${widget.product.price.separateWithComma} تومان",
                       style: AppTextStyles.title,
                     ),
                     Visibility(
-                        visible: widget.discount > 0 ? true : false,
+                        visible: widget.product.discount > 0 ? true : false,
                         child: Text(
-                          widget.oldPreice.separateWithComma,
+                          widget.product.discountPrice.separateWithComma,
                           style: AppTextStyles.oldPriceStyle,
                         )),
                   ],
                 ),
                 Visibility(
-                  visible: widget.discount > 0 ? true : false,
+                  visible: widget.product.discount > 0 ? true : false,
                   child: Container(
                     padding: const EdgeInsets.all(AppDimens.small * .5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60),
                         color: Colors.red),
-                    child: Text("${widget.discount} %"),
+                    child: Text("${widget.product.discount} %"),
                   ),
                 )
               ],

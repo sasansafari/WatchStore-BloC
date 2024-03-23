@@ -72,14 +72,8 @@ class ProductListScreen extends StatelessWidget {
                                       mainAxisSpacing: 2,
                                       childAspectRatio: 0.5),
                               itemBuilder: (context, index) => ProductItem(
-                                  id: state.productList[index].id,
-                                  productName: state.productList[index].title,
-                                  discount: state.productList[index].discount,
-                                  oldPreice:
-                                      state.productList[index].discountPrice,
-                                  specialExpiration: state
-                                      .productList[index].specialExpiration,
-                                  price: state.productList[index].price)));
+                                    product: state.productList[index],
+                                  )));
                     } else if (state is ProductListError) {
                       return const Text("error");
                     } else {

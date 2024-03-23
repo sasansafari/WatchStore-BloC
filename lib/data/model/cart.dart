@@ -3,11 +3,14 @@ class CartModel {
   int productId;
   String product;
   int count;
-
+  bool countLoading = false;
+  bool deleteLoading = false;
   CartModel(
       {required this.id,
       required this.productId,
       required this.product,
+      this.countLoading = false,
+      this.deleteLoading = false,
       required this.count});
 
   factory CartModel.fromJson(Map<String, dynamic> json) {

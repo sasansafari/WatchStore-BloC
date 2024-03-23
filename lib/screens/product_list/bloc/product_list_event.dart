@@ -10,4 +10,6 @@ sealed class ProductListEvent extends Equatable {
 class ProductListInit extends ProductListEvent {
   final param;
   const ProductListInit({required this.param});
+  @override
+  List<Object> get props => [param];
 }

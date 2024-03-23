@@ -109,15 +109,8 @@ class CartList extends StatelessWidget {
         child: ListView.builder(
             itemCount: list.length,
             itemBuilder: ((context, index) {
-              final cartBloc = BlocProvider.of<CartBloc>(context);
               return ShoppingCartItem(
-                productTitle: "ساعت شیائومی mi Watch lite",
-                count: list[index].count,
-                add: () => cartBloc.add(AddToCartEvent(list[index].productId)),
-                remove: () =>
-                    cartBloc.add(RemoveFromCartEvent(list[index].productId)),
-                delete: () =>
-                    cartBloc.add(DeleteFromCart(list[index].productId)),
+                cartModel: list[index],
               );
             })));
   }

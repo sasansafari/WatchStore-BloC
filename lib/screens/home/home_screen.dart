@@ -82,21 +82,8 @@ class HomeScreen extends StatelessWidget {
                                   shrinkWrap: true,
                                   // reverse: true,
                                   itemBuilder: ((context, index) => ProductItem(
-                                        id: state
-                                            .home.amazingProducts[index].id,
-
-                                        productName: state
-                                            .home.amazingProducts[index].title,
-                                        price: state
-                                            .home.amazingProducts[index].price,
-                                        // specialExpiration: state
-                                        //     .home
-                                        //     .amazingProducts[index]
-                                        //     .specialExpiration,
-                                        specialExpiration:
-                                            "2024-02-23 00:00:00",
-                                        discount: state.home
-                                            .amazingProducts[index].discount,
+                                        product:
+                                            state.home.amazingProducts[index],
                                       ))),
                             ),
                             const VerticalText()
