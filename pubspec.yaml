@@ -45,6 +45,7 @@ dependencies:
   image_picker: ^1.0.7
   flutter_osm_plugin: ^0.70.4
   equatable: ^2.0.5
+  url_launcher: ^6.2.5
 
    
 

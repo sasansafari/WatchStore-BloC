@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/physics.dart';
 import 'package:watch_store/data/model/cart.dart';
 import 'package:watch_store/data/repo/cart_repo.dart';
-import 'package:watch_store/screens/auth/cubit/auth_cubit.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -15,8 +15,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       try {
         if (event is CartInitEvent) {
           emit(CartLoadingState());
-          final cartList = await _cartRepository.getUserCart();
-          emit(CartLoadedState(cartList));
+          final userCart = await _cartRepository.getUserCart();
+          emit(CartLoadedState(userCart));
         } else if (event is RemoveFromCartEvent) {
           await _cartRepository
               .removeFromCart(productId: event.productId)
@@ -33,6 +33,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await _cartRepository
               .countCartItems()
               .then((value) => emit(CartCountState()));
+        } else if (event is PayEvent) {
+          await _cartRepository
+              .payCart()
+              .then((value) => emit(RecivedPayLinkState(url: value)));
         }
       } catch (e) {
         emit(CartErrorState());
