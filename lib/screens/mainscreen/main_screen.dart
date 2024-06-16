@@ -35,35 +35,40 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
-  late final map = {
+  late final Map<int, GlobalKey<NavigatorState>> map = {
     BtmNavScreenIndex.home: _homeKey,
     BtmNavScreenIndex.basket: _basketKey,
     BtmNavScreenIndex.profile: _profileKey,
   };
 
+
   // map[0] => _homeKey
   // map[1] => _basketKey
   // map[2] => _profileKey
 
-  Future<bool> _onWillPop() async {
-    if (map[selectedIndex]!.currentState!.canPop()) {
-      map[selectedIndex]!.currentState!.pop();
+  void _onPopInvoked(bool didPop) {
+    final currentNavigatorState = map[selectedIndex]?.currentState;
+
+    if (didPop) {
+      // اگر بازگشت موفقیت‌آمیز بود، نیازی به انجام کاری نیست
+      return;
+    } else if (currentNavigatorState != null && currentNavigatorState.canPop()) {
+      currentNavigatorState.pop();
     } else if (_routeHistory.length > 1) {
       setState(() {
         _routeHistory.removeLast();
         selectedIndex = _routeHistory.last;
       });
     }
-
-    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     double btmNavHeight = size.height * .1;
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: _onPopInvoked,
       child: Scaffold(
         body: Stack(
           children: [
