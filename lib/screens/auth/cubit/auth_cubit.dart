@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:watch_store/data/constants.dart';
 import 'package:watch_store/utils/shared_preferences_constants.dart';
 import 'package:watch_store/utils/shared_preferences_manager.dart';
@@ -8,13 +9,22 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial()) {
-    //check token
-    //isStore = T
-    // emit(LoggedInState());
-    //isStore = F
-    // emit(LoggedOutState());
+    checkUserToken() async {
+      SharedPreferences _sharedPreferences =
+          await SharedPreferences.getInstance();
+      bool token =
+          _sharedPreferences.containsKey(SharedPreferencesConstants.token);
+      debugPrint(token.toString());
+      if (token == true) {
+        emit(LoggedInState());
+      } else if (token == false) {
+        emit(LoggedOutState());
+      }
+    }
 
-    emit(LoggedInState());
+    checkUserToken();
+
+    //emit(LoggedInState());
   }
 
   final Dio _dio = Dio();

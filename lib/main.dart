@@ -12,7 +12,10 @@ import 'package:watch_store/utils/shared_preferences_manager.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferencesManager().init();
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+    providers: [BlocProvider(create: (context) => CartBloc(cartRepository))],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
